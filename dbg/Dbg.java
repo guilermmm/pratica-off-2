@@ -28,6 +28,10 @@ public class Dbg implements AutoCloseable {
       string = str;
     }
 
+    public static String colored(Color color, String string) {
+      return color + string + RESET;
+    }
+
     @Override
     public String toString() {
       return string;

@@ -5,8 +5,12 @@ public class Costumer extends User {
     allowedActions = new Action[] {
         Action.LIST,
         Action.SEARCH,
-        Action.READ,
+        Action.QUANTITY,
         Action.BUY,
     };
+  }
+
+  public Costumer(String username) {
+    super(username);
   }
 }
