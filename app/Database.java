@@ -68,7 +68,7 @@ public class Database {
       throw new DbException("Car not found");
     }
 
-    cars.remove(carByRenavam.get());
+    cars.removeIf(c -> c.getRenavam().equals(renavam));
   }
 
   public void updateCar(String renavam, Car car) throws DbException {

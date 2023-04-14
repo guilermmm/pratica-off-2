@@ -250,7 +250,11 @@ public class Client {
             case DELETE: {
               String renavam = dbg.input(Color.YELLOW_BRIGHT, "Digite o renavam do carro: ", Color.GREEN);
 
-              stub.removeCar(user, renavam);
+              try {
+                stub.removeCar(user, renavam);
+              } catch (Exception e) {
+                Dbg.log(Color.RED, "Carro não encontrado");
+              }
             }
               break;
             case LIST: {
