@@ -177,16 +177,17 @@ public class Client {
 
               if (carByRenavam != null) {
                 Dbg.log(Color.BLUE, "Carro com este renavam já está cadastrado");
-                Dbg.log(Color.BLUE, "Carro: " + carByRenavam);
+                showCars(List.of(carByRenavam));
                 String quantityString = dbg.input(
                     Color.BLUE,
-                    "Gostaria de adicionar que quantidade a este carro?",
+                    "Gostaria de adicionar que quantidade a este carro? ",
                     Color.GREEN);
 
                 try {
                   int quantity = Integer.parseInt(quantityString);
                   carByRenavam.setQuantity(carByRenavam.getQuantity() + quantity);
                   stub.updateCar(user, renavam, carByRenavam);
+                  showCars(List.of(carByRenavam));
                 } catch (Exception e) {
                   Dbg.log(Color.RED, "Quantidade inválida");
                 }
@@ -245,6 +246,7 @@ public class Client {
               Car car = new Car(renavam, name, category, year, quantity, price);
 
               stub.addCar(user, car);
+              showCars(List.of(car));
             }
               break;
             case DELETE: {

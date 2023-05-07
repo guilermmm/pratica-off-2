@@ -86,12 +86,6 @@ public class Car implements Serializable {
     this.price = price;
   }
 
-  @Override
-  public String toString() {
-    return "Car [renavam=" + renavam + ", name=" + name + ", category=" + category + ", year=" + year + ", quantity="
-        + quantity + ", price=" + price + "]";
-  }
-
   public Car clone() {
     return new Car(renavam, name, category, year, quantity, price);
   }
