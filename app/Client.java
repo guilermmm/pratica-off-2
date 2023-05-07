@@ -298,10 +298,10 @@ public class Client {
             }
               break;
             case UPDATE: {
-              String renavam = dbg.input(Color.YELLOW_BRIGHT, "Digite o renavam do carro a ser alterado: ",
+              String searchRenavam = dbg.input(Color.YELLOW_BRIGHT, "Digite o renavam do carro a ser alterado: ",
                   Color.GREEN);
 
-              Car carByRenavam = stub.getCarByRenavam(user, renavam);
+              Car carByRenavam = stub.getCarByRenavam(user, searchRenavam);
 
               if (carByRenavam == null) {
                 Dbg.log(Color.RED, "Carro não encontrado");
@@ -310,7 +310,7 @@ public class Client {
 
               showCars(List.of(carByRenavam));
 
-              renavam = dbg.input(Color.YELLOW_BRIGHT, "Digite o novo renavam: ", Color.GREEN);
+              String renavam = dbg.input(Color.YELLOW_BRIGHT, "Digite o novo renavam: ", Color.GREEN);
 
               String name = dbg.input(Color.YELLOW_BRIGHT, "Digite o novo nome: ", Color.GREEN);
 
@@ -361,7 +361,7 @@ public class Client {
 
               Car car = new Car(renavam, name, category, year, quantity, price);
 
-              stub.updateCar(user, renavam, car);
+              stub.updateCar(user, searchRenavam, car);
             }
               break;
             case QUANTITY: {
