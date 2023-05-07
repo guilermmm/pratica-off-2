@@ -98,7 +98,7 @@ public class Client {
       String categoryPadding = " ".repeat(maxCategoryLength - car.getCategory().toString().length());
       String yearPadding = " ".repeat(maxYearLength - String.valueOf(car.getYear()).length());
       String quantityPadding = " ".repeat(maxQuantityLength - String.valueOf(car.getQuantity()).length());
-      String pricePadding = " ".repeat(maxPriceLength - String.valueOf(car.getPrice()).length());
+      String pricePadding = " ".repeat(maxPriceLength - String.format("$%.2f", car.getPrice()).length());
 
       String renavam = Color.colored(Color.BLUE, car.getRenavam()) + renavamPadding;
       String name = Color.colored(Color.BLUE, car.getName()) + namePadding;
