@@ -362,6 +362,7 @@ public class Client {
               Car car = new Car(renavam, name, category, year, quantity, price);
 
               stub.updateCar(user, searchRenavam, car);
+              showCars(List.of(car));
             }
               break;
             case QUANTITY: {
