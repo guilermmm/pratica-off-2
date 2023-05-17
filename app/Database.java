@@ -7,21 +7,9 @@ import app.Car.Category;
 import exception.DbException;
 
 public class Database {
-  private static Database instance = null;
-
   private List<Car> cars = new ArrayList<>();
   private String adminUsername = "admin";
   private String adminPassword = "admin";
-
-  private Database() {
-  }
-
-  public static Database getInstance() {
-    if (instance == null) {
-      instance = new Database();
-    }
-    return instance;
-  }
 
   public List<Car> getCars() {
     return cars.stream()
@@ -46,9 +34,9 @@ public class Database {
         .collect(Collectors.toList());
   }
 
-  public Optional<Car> getCarByRenavam(String name) {
+  public Optional<Car> getCarByRenavam(String renavam) {
     return cars.stream()
-        .filter(car -> car.getRenavam().equals(name))
+        .filter(car -> car.getRenavam().equals(renavam))
         .map(Car::clone)
         .findFirst();
   }

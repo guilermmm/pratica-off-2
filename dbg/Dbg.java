@@ -40,9 +40,15 @@ public class Dbg implements AutoCloseable {
 
   private Scanner scanner = new Scanner(System.in);
 
-  // input from stdin
   public String input(Color color, String prompt, Color inputColor) {
     System.out.print(color + prompt + inputColor);
+    String input = scanner.nextLine();
+    System.out.print(Color.RESET);
+    return input;
+  }
+
+  public String input(Color color) {
+    System.out.print(color);
     String input = scanner.nextLine();
     System.out.print(Color.RESET);
     return input;

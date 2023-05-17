@@ -20,13 +20,4 @@ public abstract class User implements Serializable {
   public Action[] getAllowedActions() {
     return allowedActions;
   }
-
-  public static boolean can(Action action) {
-    for (var a : allowedActions) {
-      if (a == action) {
-        return true;
-      }
-    }
-    return false;
-  }
 }

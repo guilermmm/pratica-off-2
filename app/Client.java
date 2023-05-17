@@ -426,7 +426,7 @@ public class Client {
       }
 
     } catch (Exception e) {
-      System.err.println("Cliente: " + e.toString());
+      Dbg.log(Color.RED, "Cliente: " + e.toString());
       e.printStackTrace();
     }
   }

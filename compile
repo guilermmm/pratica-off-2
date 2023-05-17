@@ -1,1 +1,1 @@
-rm -rf */*.class && javac app/Server.java app/Client.java && clear
+rm -rf */*.class && javac app/Gateway.java app/Client.java && clear
