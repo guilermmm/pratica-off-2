@@ -45,14 +45,20 @@ public class Gateway {
       String leaderId = "n1";
       List<String> followersIds = List.of("n2", "n3");
 
-      DealershipGateway dealership = new DealershipGateway();
-      DealershipApi skeleton = (DealershipApi) UnicastRemoteObject.exportObject(dealership, 0);
-      register.bind("dealership", skeleton);
-
       Thread leaderThread = new Thread(new Server(leaderId, new LeaderNode(followersIds)));
       leader = new Node(leaderId);
       leaderThread.start();
       nodes.add(leader);
+
+      boolean done = false;
+      while (!done) {
+        try {
+          register.lookup(leader.id());
+          done = true;
+        } catch (Exception e) {
+          Thread.sleep(0);
+        }
+      }
 
       for (String id : followersIds) {
         Thread thread = new Thread(new Server(id, new FollowerNode(leaderId)));
@@ -60,7 +66,9 @@ public class Gateway {
         nodes.add(new Node(id));
       }
 
-      Thread.sleep(1000);
+      DealershipGateway dealership = new DealershipGateway();
+      DealershipApi skeleton = (DealershipApi) UnicastRemoteObject.exportObject(dealership, 0);
+      register.bind("dealership", skeleton);
 
       try (Dbg dbg = new Dbg()) {
         while (true) {
@@ -81,10 +89,10 @@ public class Gateway {
           }
 
           if (node.isAlive()) {
-            setNodeAlive(id, false);
+            killNode(id);
             Dbg.log(Color.BLUE, "Node " + id + " killed");
           } else {
-            setNodeAlive(id, true);
+            reviveNode(id);
             Dbg.log(Color.BLUE, "Node " + id + " revived");
           }
         }
@@ -93,18 +101,6 @@ public class Gateway {
       Dbg.log(Color.RED, "Server exception: " + e.toString());
       e.printStackTrace();
     }
-  }
-
-  public static Node findNode(String id) {
-    return nodes.stream().filter(n -> n.id().equals(id)).findFirst().orElse(null);
-  }
-
-  public static void setNodeAlive(String nodeId, boolean isAlive) {
-    Node node = findNode(nodeId);
-    if (node == null) {
-      throw new RuntimeException("Nó " + nodeId + " não encontrado");
-    }
-    node.setAlive(isAlive);
   }
 
   public static Node getNextNode() {
@@ -128,24 +124,50 @@ public class Gateway {
     return leader;
   }
 
-  public static NodeRole getNodeRole(String nodeId) {
-    var followersIds = nodes.stream().filter(n -> n.isAlive() && !n.id().equals(leader.id())).map(Node::id).toList();
-    if (findNode(nodeId).isAlive()) {
-      if (nodeId.equals(leader.id())) {
-        return new LeaderNode(followersIds);
-      } else {
-        return new FollowerNode(leader.id());
-      }
-    } else {
-      return new DeadNode();
-    }
+  private static Node findNode(String id) {
+    return nodes.stream().filter(n -> n.id().equals(id)).findFirst().orElse(null);
   }
 
-  public static void updateAllRoles() {
+  private static void killNode(String nodeId) {
+    Node node = findNode(nodeId);
+    if (node == null) {
+      throw new RuntimeException("Nó " + nodeId + " não encontrado");
+    }
+    node.setAlive(false);
+  }
+
+  private static void reviveNode(String nodeId) {
+    Node node = findNode(nodeId);
+    if (node == null) {
+      throw new RuntimeException("Nó " + nodeId + " não encontrado");
+    }
+    node.setAlive(true);
+    updateAllRoles();
+  }
+
+  private static void updateAllRoles() {
+    List<String> followersIds = nodes.stream()
+        .filter(n -> n.isAlive() && !n.id().equals(leader.id()))
+        .map(Node::id)
+        .toList();
+
     for (Node node : nodes) {
+      if (!node.isAlive()) {
+        continue;
+      }
+
       try {
+        NodeRole role = null;
+        if (findNode(node.id()).isAlive()) {
+          if (node.id().equals(leader.id())) {
+            role = new LeaderNode(followersIds);
+          } else {
+            role = new FollowerNode(leader.id());
+          }
+        }
+
         NodeApi nodeApi = (NodeApi) register.lookup(node.id());
-        nodeApi.setRole(getNodeRole(node.id()));
+        nodeApi.setRole(role);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }

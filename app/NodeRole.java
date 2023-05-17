@@ -13,7 +13,3 @@ record LeaderNode(List<String> followers) implements NodeRole {
 record FollowerNode(String leader) implements NodeRole {
   private static final long serialVersionUID = 1L;
 }
-
-record DeadNode() implements NodeRole {
-  private static final long serialVersionUID = 1L;
-}

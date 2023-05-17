@@ -28,14 +28,7 @@ public class Server implements Runnable {
 
       List<Car> cars;
       if (role instanceof FollowerNode node) {
-        NodeApi leaderStub = null;
-        while (leaderStub == null) {
-          try {
-            leaderStub = (NodeApi) register.lookup(node.leader());
-          } catch (Exception e) {
-            Thread.sleep(0);
-          }
-        }
+        NodeApi leaderStub = (NodeApi) register.lookup(node.leader());
         cars = leaderStub.listCars();
       } else {
         cars = readFromDisk();
